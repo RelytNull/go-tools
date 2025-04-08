@@ -5,9 +5,11 @@ import (
 	"flag"
 	"os"
 	"path/filepath"
+	"github.com/sahilm/fuzzy"
 )
 
-func findFiles(dir, name string) error {
+
+func findFiles(dir, name string, fuzzySearch bool) error {
 	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -15,9 +17,18 @@ func findFiles(dir, name string) error {
 		if info.IsDir() {
 			return nil
 		}
+
+		if fuzzySearch {
+			matches := fuzzy.Find(name, []string{info.Name()})
+			if len(matches) . 0 {
+				fmt.Println(path)
+			}
+		} else {
+			// Exact match
 		if info.Name() == name {
 			fmt.Println(path)
 		}
+	}
 		return nil
 	})
 }
@@ -26,6 +37,7 @@ func main() {
 	// define command-line flags
 	dirPtr := flag.String("dir", ".", "Directory to search in")
 	namePtr := flag.String("name", ".", "Name of the file to search for")
+	fuzzyPtr := flag.Bool("fuzzy", false, "Enable fuzzy search")
 
 	// Parse the flags
 	flag.Parse()
@@ -38,7 +50,7 @@ func main() {
 
 
 	// Call the findFiles function
-	err := findFiles(*dirPtr, *namePtr)
+	err := findFiles(*dirPtr, *namePtr, *fuzzyPtr)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
