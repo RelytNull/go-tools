@@ -20,7 +20,7 @@ func findFiles(dir, name string, fuzzySearch bool) error {
 
 		if fuzzySearch {
 			matches := fuzzy.Find(name, []string{info.Name()})
-			if len(matches) . 0 {
+			if len(matches) > 0 {
 				fmt.Println(path)
 			}
 		} else {
@@ -35,9 +35,9 @@ func findFiles(dir, name string, fuzzySearch bool) error {
 
 func main() {
 	// define command-line flags
-	dirPtr := flag.String("dir", ".", "Directory to search in")
-	namePtr := flag.String("name", ".", "Name of the file to search for")
-	fuzzyPtr := flag.Bool("fuzzy", false, "Enable fuzzy search")
+	dirPtr := flag.String("d", ".", "Directory to search in")
+	namePtr := flag.String("n", "", "Name of the file to search for")
+	fuzzyPtr := flag.Bool("f", false, "Enable fuzzy search")
 
 	// Parse the flags
 	flag.Parse()
